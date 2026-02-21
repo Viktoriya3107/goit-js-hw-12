@@ -16,11 +16,14 @@ export function createGallery(images) {
       img => `
         <li class="gallery-item">
           <a href="${img.largeImageURL}">
-            <img
-              src="${img.webformatURL}"
-              alt="${img.tags}"
-            />
+            <img src="${img.webformatURL}" alt="${img.tags}" loading="lazy"/>
           </a>
+          <div class="info">
+            <p><b>Likes:</b> ${img.likes}</p>
+            <p><b>Views:</b> ${img.views}</p>
+            <p><b>Comments:</b> ${img.comments}</p>
+            <p><b>Downloads:</b> ${img.downloads}</p>
+          </div>
         </li>
       `
     )

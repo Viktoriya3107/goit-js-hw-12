@@ -12,7 +12,7 @@ import {
   hideLoadMoreButton,
 } from './js/render-functions';
 
-const form = document.querySelector('.search-form');
+const form = document.querySelector('.form'); 
 const loadMoreBtn = document.querySelector('.load-more');
 
 let query = '';
@@ -40,12 +40,20 @@ form.addEventListener('submit', async event => {
         message: 'Sorry, no images found.',
         position: 'topRight',
       });
+      hideLoadMoreButton(); 
       return;
     }
 
     createGallery(data.hits);
 
-    if (page * PER_PAGE < totalHits) {
+    
+    if (page * PER_PAGE >= totalHits) {
+      hideLoadMoreButton();
+      iziToast.info({
+        message: "You've reached the end of search results.",
+        position: 'topRight',
+      });
+    } else {
       showLoadMoreButton();
     }
 
@@ -63,6 +71,7 @@ form.addEventListener('submit', async event => {
 loadMoreBtn.addEventListener('click', async () => {
   page += 1;
   showLoader();
+  hideLoadMoreButton(); 
 
   try {
     const data = await getImagesByQuery(query, page);
@@ -71,16 +80,16 @@ loadMoreBtn.addEventListener('click', async () => {
     if (page * PER_PAGE >= totalHits) {
       hideLoadMoreButton();
       iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
+        message: "You've reached the end of search results.",
         position: 'topRight',
       });
+    } else {
+      showLoadMoreButton(); 
     }
 
     const card = document.querySelector('.gallery-item');
-
     if (card) {
-      const height = card.getBoundingClientRect().height;
-
+      const { height } = card.getBoundingClientRect();
       window.scrollBy({
         top: height * 2,
         behavior: 'smooth',
